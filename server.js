@@ -77,13 +77,14 @@ app.post("/api/exercise/add",async (req,res)=>{
   description=req.body.description;
   duration=req.body.duration;
   if(req.body.date){
-    date=req.body.date;
+    date=new Date(req.body.date).toDateString();
   } else {
-    var today = new Date();
-    var one = today.getFullYear();
-    var two = today.getMonth() < 10 ? "0"+(today.getMonth()+1) : (today.getMonth()+1);
-    var three = today.getDate() < 10 ? "0"+today.getDate() : today.getDate();
-    date = one+"-"+two+"-"+three;
+    date = new Date().toDateString();
+    // var today = new Date();
+    // var one = today.getFullYear();
+    // var two = today.getMonth() < 10 ? "0"+(today.getMonth()+1) : (today.getMonth()+1);
+    // var three = today.getDate() < 10 ? "0"+today.getDate() : today.getDate();
+    // date = one+"-"+two+"-"+three;
   }
   try{
     const useridStatus = await User.findOne({
@@ -150,7 +151,12 @@ app.get("/api/exercise/log",async (req,res)=>{
         answer.log = answer.log.slice(0,limit);
       }
       answer.count=answer.log.length;
-      return res.json({answer})
+      return res.json({
+          _id:answer._id,
+          username:answer.username,
+          count:answer.count,
+          log:answer.log
+      })
     } else {
       return res.status(500).json('userId not found');
     }
